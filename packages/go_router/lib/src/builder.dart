@@ -205,7 +205,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     final Map<Page<Object?>, GoRouterState> registry =
         <Page<Object?>, GoRouterState>{};
     if (widget.matchList.isError) {
-      pages.add(_buildErrorPage(context, widget.matchList));
+      pages.add(_buildErrorPage(context, widget.matchList, widget.matchList.lastOrNull));
     } else {
       for (final RouteMatchBase match in widget.matches) {
         final Page<Object?>? page = _buildPage(context, match);
@@ -215,7 +215,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
         pages.add(page);
         pageToRouteMatchBase[page] = match;
         registry[page] =
-            match.buildState(widget.configuration, widget.matchList);
+            match.buildState(widget.configuration, widget.matchList, match);
       }
     }
     _pages = pages;
@@ -226,7 +226,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
   Page<Object?>? _buildPage(BuildContext context, RouteMatchBase match) {
     if (match is RouteMatch) {
       if (match is ImperativeRouteMatch && match.matches.isError) {
-        return _buildErrorPage(context, match.matches);
+        return _buildErrorPage(context, match.matches, match);
       }
       return _buildPageForGoRoute(context, match);
     }
@@ -240,7 +240,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
   Page<Object?>? _buildPageForGoRoute(BuildContext context, RouteMatch match) {
     final GoRouterPageBuilder? pageBuilder = match.route.pageBuilder;
     final GoRouterState state =
-        match.buildState(widget.configuration, widget.matchList);
+        match.buildState(widget.configuration, widget.matchList, match);
     if (pageBuilder != null) {
       final Page<Object?> page = pageBuilder(context, state);
       if (page is! NoOpPage) {
@@ -265,7 +265,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     ShellRouteMatch match,
   ) {
     final GoRouterState state =
-        match.buildState(widget.configuration, widget.matchList);
+        match.buildState(widget.configuration, widget.matchList, match);
     final GlobalKey<NavigatorState> navigatorKey = match.navigatorKey;
     final ShellRouteContext shellRouteContext = ShellRouteContext(
       route: match.route,
@@ -375,10 +375,11 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     );
   }
 
-  GoRouterState _buildErrorState(RouteMatchList matchList) {
+  GoRouterState _buildErrorState(RouteMatchList matchList, RouteMatchBase? match) {
     assert(matchList.isError);
     return GoRouterState(
       widget.configuration,
+      match: match,
       uri: matchList.uri,
       matchedLocation: matchList.uri.path,
       fullPath: matchList.fullPath,
@@ -390,8 +391,8 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
   }
 
   /// Builds a an error page.
-  Page<void> _buildErrorPage(BuildContext context, RouteMatchList matchList) {
-    final GoRouterState state = _buildErrorState(matchList);
+  Page<void> _buildErrorPage(BuildContext context, RouteMatchList matchList, RouteMatchBase? match) {
+    final GoRouterState state = _buildErrorState(matchList, match);
     assert(state.error != null);
 
     // If the error page builder is provided, use that, otherwise, if the error

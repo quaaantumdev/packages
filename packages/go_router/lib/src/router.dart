@@ -213,7 +213,7 @@ class GoRouter implements RouterConfig<RouteMatchList> {
       parserExceptionHandler =
           (BuildContext context, RouteMatchList routeMatchList) {
         onException(context,
-            configuration.buildTopLevelGoRouterState(routeMatchList), this);
+            configuration.buildTopLevelGoRouterState(routeMatchList, routeMatchList.lastOrNull), this);
         // Avoid updating GoRouterDelegate if onException is provided.
         return routerDelegate.currentConfiguration;
       };
