@@ -267,6 +267,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     final GoRouterState state =
         match.buildState(widget.configuration, widget.matchList, match);
     final GlobalKey<NavigatorState> navigatorKey = match.navigatorKey;
+    final matchList = widget.matchList;
     final ShellRouteContext shellRouteContext = ShellRouteContext(
       route: match.route,
       routerState: state,
@@ -280,7 +281,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
           navigatorRestorationId: restorationScopeId,
           navigatorKey: navigatorKey,
           matches: match.matches,
-          matchList: widget.matchList,
+          matchList: matchList,
           configuration: widget.configuration,
           observers: observers ?? const <NavigatorObserver>[],
           onPopPageWithRouteMatch: widget.onPopPageWithRouteMatch,
