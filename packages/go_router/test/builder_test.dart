@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_router/src/create_route_instance_key.dart';
 
 import 'test_helpers.dart';
 
@@ -30,6 +31,7 @@ void main() {
       final RouteMatchList matches = RouteMatchList(
         matches: <RouteMatch>[
           RouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: config.routes.first as GoRoute,
             matchedLocation: '/',
             pageKey: const ValueKey<String>('/'),
@@ -76,12 +78,14 @@ void main() {
       final RouteMatchList matches = RouteMatchList(
         matches: <RouteMatchBase>[
           ShellRouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: config.routes.first as ShellRouteBase,
             matchedLocation: '',
             pageKey: const ValueKey<String>(''),
             navigatorKey: shellNavigatorKey,
             matches: <RouteMatchBase>[
               RouteMatch(
+                routeInstanceKey: createRouteInstanceKey(),
                 route: config.routes.first.routes.first as GoRoute,
                 matchedLocation: '/',
                 pageKey: const ValueKey<String>('/'),
@@ -122,6 +126,7 @@ void main() {
       final RouteMatchList matches = RouteMatchList(
         matches: <RouteMatch>[
           RouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: config.routes.first as GoRoute,
             matchedLocation: '/',
             pageKey: const ValueKey<String>('/'),
@@ -172,12 +177,14 @@ void main() {
       final RouteMatchList matches = RouteMatchList(
         matches: <RouteMatchBase>[
           ShellRouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: config.routes.first as ShellRouteBase,
             matchedLocation: '',
             pageKey: const ValueKey<String>(''),
             navigatorKey: shellNavigatorKey,
             matches: <RouteMatchBase>[
               RouteMatch(
+                routeInstanceKey: createRouteInstanceKey(),
                 route: config.routes.first.routes.first as GoRoute,
                 matchedLocation: '/details',
                 pageKey: const ValueKey<String>('/details'),
@@ -243,6 +250,7 @@ void main() {
       final RouteMatchList matches = RouteMatchList(
         matches: <RouteMatch>[
           RouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: config.routes.first.routes.first as GoRoute,
             matchedLocation: '/a/details',
             pageKey: const ValueKey<String>('/a/details'),
@@ -297,12 +305,14 @@ void main() {
       final RouteMatchList matches = RouteMatchList(
         matches: <RouteMatchBase>[
           ShellRouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: config.routes.first as ShellRouteBase,
             matchedLocation: '',
             pageKey: const ValueKey<String>(''),
             navigatorKey: shellNavigatorKey,
             matches: <RouteMatchBase>[
               RouteMatch(
+                routeInstanceKey: createRouteInstanceKey(),
                 route: config.routes.first.routes.first as GoRoute,
                 matchedLocation: '/a',
                 pageKey: const ValueKey<String>('/a'),

@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'configuration.dart';
+import 'create_route_instance_key.dart';
 import 'information_provider.dart';
 import 'logging.dart';
 import 'match.dart';
@@ -191,6 +192,7 @@ class GoRouteInformationParser extends RouteInformationParser<RouteMatchList> {
       case NavigatingType.push:
         return baseRouteMatchList!.push(
           ImperativeRouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             pageKey: _getUniqueValueKey(),
             completer: completer!,
             matches: newMatchList,
@@ -204,6 +206,7 @@ class GoRouteInformationParser extends RouteInformationParser<RouteMatchList> {
         }
         return baseRouteMatchList.push(
           ImperativeRouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             pageKey: _getUniqueValueKey(),
             completer: completer!,
             matches: newMatchList,
@@ -217,6 +220,7 @@ class GoRouteInformationParser extends RouteInformationParser<RouteMatchList> {
         }
         return baseRouteMatchList.push(
           ImperativeRouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             pageKey: routeMatch.pageKey,
             completer: completer!,
             matches: newMatchList,

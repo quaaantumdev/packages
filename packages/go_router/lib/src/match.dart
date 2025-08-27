@@ -14,11 +14,13 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart' as meta;
 
 import 'configuration.dart';
+import 'create_route_instance_key.dart';
 import 'logging.dart';
 import 'misc/errors.dart';
 import 'path_utils.dart';
 import 'route.dart';
 import 'state.dart';
+
 
 /// The function signature for [RouteMatchList.visitRouteMatches]
 ///
@@ -27,6 +29,8 @@ typedef RouteMatchVisitor = bool Function(RouteMatchBase);
 
 /// The base class for various route matches.
 abstract class RouteMatchBase with Diagnosticable {
+  Object get routeInstanceKey;
+
   /// An abstract route match base
   const RouteMatchBase();
 
@@ -176,6 +180,7 @@ abstract class RouteMatchBase with Diagnosticable {
       return _empty;
     }
     final RouteMatchBase result = ShellRouteMatch(
+      routeInstanceKey: createRouteInstanceKey(),
       route: route,
       // The RouteConfiguration should have asserted the subRouteMatches must
       // have at least one match for this ShellRouteBase.
@@ -246,6 +251,7 @@ abstract class RouteMatchBase with Diagnosticable {
       return <GlobalKey<NavigatorState>?, List<RouteMatchBase>>{
         parentKey: <RouteMatchBase>[
           RouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: route,
             matchedLocation: newMatchedLocation,
             pageKey: ValueKey<String>(newMatchedPath),
@@ -287,6 +293,7 @@ abstract class RouteMatchBase with Diagnosticable {
         .insert(
           0,
           RouteMatch(
+            routeInstanceKey: createRouteInstanceKey(),
             route: route,
             matchedLocation: newMatchedLocation,
             pageKey: ValueKey<String>(newMatchedPath),
@@ -312,7 +319,11 @@ class RouteMatch extends RouteMatchBase {
     required this.route,
     required this.matchedLocation,
     required this.pageKey,
+    required this.routeInstanceKey,
   });
+
+  @override
+  final Object routeInstanceKey;
 
   /// The matched route.
   @override
@@ -372,7 +383,11 @@ class ShellRouteMatch extends RouteMatchBase {
     required this.matchedLocation,
     required this.pageKey,
     required this.navigatorKey,
+    required this.routeInstanceKey,
   }) : assert(matches.isNotEmpty);
+
+  @override
+  final Object routeInstanceKey;
 
   @override
   final ShellRouteBase route;
@@ -430,6 +445,7 @@ class ShellRouteMatch extends RouteMatchBase {
   @meta.internal
   ShellRouteMatch copyWith({required List<RouteMatchBase>? matches}) {
     return ShellRouteMatch(
+      routeInstanceKey: routeInstanceKey,
       matches: matches ?? this.matches,
       route: route,
       matchedLocation: matchedLocation,
@@ -459,6 +475,7 @@ class ImperativeRouteMatch extends RouteMatch {
     required super.pageKey,
     required this.matches,
     required this.completer,
+    required super.routeInstanceKey,
   }) : super(
          route: _getsLastRouteFromMatches(matches),
          matchedLocation: _getsMatchedLocationFromMatches(matches),
@@ -1054,6 +1071,7 @@ class _RouteMatchListDecoder
           encodedImperativeMatch[RouteMatchListCodec._pageKey]! as String,
         );
         final ImperativeRouteMatch imperativeMatch = ImperativeRouteMatch(
+          routeInstanceKey: createRouteInstanceKey(),
           pageKey: pageKey,
           // TODO(chunhtai): Figure out a way to preserve future.
           // https://github.com/flutter/flutter/issues/128122.

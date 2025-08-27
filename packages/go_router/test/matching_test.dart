@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_router/src/create_route_instance_key.dart';
 import 'package:go_router/src/match.dart';
 
 import 'test_helpers.dart';
@@ -103,6 +104,7 @@ void main() {
     final RouteMatchList list2 = configuration.findMatch(Uri.parse('/b'));
     list1.push(
       ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: const ValueKey<String>('/b-p0'),
         matches: list2,
         completer: Completer<Object?>(),

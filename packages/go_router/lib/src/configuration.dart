@@ -346,6 +346,7 @@ class RouteConfiguration {
     for (final ImperativeRouteMatch imperativeMatch
         in matchList.matches.whereType<ImperativeRouteMatch>()) {
       final ImperativeRouteMatch match = ImperativeRouteMatch(
+        routeInstanceKey: imperativeMatch.routeInstanceKey,
         pageKey: imperativeMatch.pageKey,
         matches: findMatch(
           imperativeMatch.matches.uri,

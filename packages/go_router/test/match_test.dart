@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_router/src/create_route_instance_key.dart';
 
 void main() {
   group('RouteMatch', () {
@@ -168,6 +169,7 @@ void main() {
     final RouteMatchList matchList1 = RouteMatchList(
       matches: <RouteMatch>[
         RouteMatch(
+          routeInstanceKey: createRouteInstanceKey(),
           route: GoRoute(path: '/', builder: (_, __) => const Text('hi')),
           matchedLocation: '/',
           pageKey: const ValueKey<String>('dummy'),
@@ -180,6 +182,7 @@ void main() {
     final RouteMatchList matchList2 = RouteMatchList(
       matches: <RouteMatch>[
         RouteMatch(
+          routeInstanceKey: createRouteInstanceKey(),
           route: GoRoute(path: '/a', builder: (_, __) => const Text('a')),
           matchedLocation: '/a',
           pageKey: const ValueKey<String>('dummy'),
@@ -197,11 +200,13 @@ void main() {
 
     test('can equal and has', () async {
       ImperativeRouteMatch match1 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key1,
         matches: matchList1,
         completer: completer1,
       );
       ImperativeRouteMatch match2 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key1,
         matches: matchList1,
         completer: completer1,
@@ -210,11 +215,13 @@ void main() {
       expect(match1.hashCode == match2.hashCode, isTrue);
 
       match1 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key1,
         matches: matchList1,
         completer: completer1,
       );
       match2 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key2,
         matches: matchList1,
         completer: completer1,
@@ -223,11 +230,13 @@ void main() {
       expect(match1.hashCode == match2.hashCode, isFalse);
 
       match1 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key1,
         matches: matchList1,
         completer: completer1,
       );
       match2 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key1,
         matches: matchList2,
         completer: completer1,
@@ -236,11 +245,13 @@ void main() {
       expect(match1.hashCode == match2.hashCode, isFalse);
 
       match1 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key1,
         matches: matchList1,
         completer: completer1,
       );
       match2 = ImperativeRouteMatch(
+        routeInstanceKey: createRouteInstanceKey(),
         pageKey: key1,
         matches: matchList1,
         completer: completer2,
