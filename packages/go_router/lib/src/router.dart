@@ -218,7 +218,7 @@ class GoRouter implements RouterConfig<RouteMatchList> {
       ) {
         onException(
           context,
-          configuration.buildTopLevelGoRouterState(routeMatchList),
+          configuration.buildTopLevelGoRouterState(routeMatchList, routeMatchList.lastOrNull),
           this,
         );
         // Avoid updating GoRouterDelegate if onException is provided.

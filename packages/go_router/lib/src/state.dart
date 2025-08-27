@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 import 'configuration.dart';
+import 'match.dart';
 import 'misc/errors.dart';
 import 'route.dart';
 
@@ -17,6 +18,7 @@ class GoRouterState {
   /// Default constructor for creating route state during routing.
   const GoRouterState(
     this._configuration, {
+    required this.match,
     required this.uri,
     required this.matchedLocation,
     this.name,
@@ -29,6 +31,10 @@ class GoRouterState {
     this.topRoute,
   });
   final RouteConfiguration _configuration;
+
+  /// The match for the current page.
+  /// Only null if there is no match (e.g. error pages if no matching has been found).
+  final RouteMatchBase? match;
 
   /// The full uri of the route, e.g. /family/f2/person/p1?filter=name#fragment
   final Uri uri;

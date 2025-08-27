@@ -50,6 +50,7 @@ abstract class RouteMatchBase with Diagnosticable {
   GoRouterState buildState(
     RouteConfiguration configuration,
     RouteMatchList matches,
+    RouteMatchBase match,
   );
 
   /// Generates a list of [RouteMatchBase] objects by matching the `route` and
@@ -341,9 +342,11 @@ class RouteMatch extends RouteMatchBase {
   GoRouterState buildState(
     RouteConfiguration configuration,
     RouteMatchList matches,
+    RouteMatchBase match,
   ) {
     return GoRouterState(
       configuration,
+      match: match as RouteMatch,
       uri: matches.uri,
       matchedLocation: matchedLocation,
       fullPath: matches.fullPath,
@@ -398,6 +401,7 @@ class ShellRouteMatch extends RouteMatchBase {
   GoRouterState buildState(
     RouteConfiguration configuration,
     RouteMatchList matches,
+    RouteMatchBase? match,
   ) {
     // The route related data is stored in the leaf route match.
     final RouteMatch leafMatch = _lastLeaf;
@@ -407,6 +411,7 @@ class ShellRouteMatch extends RouteMatchBase {
     return GoRouterState(
       configuration,
       uri: matches.uri,
+      match: match,
       matchedLocation: matchedLocation,
       fullPath: matches.fullPath,
       pathParameters: matches.pathParameters,
@@ -492,8 +497,9 @@ class ImperativeRouteMatch extends RouteMatch {
   GoRouterState buildState(
     RouteConfiguration configuration,
     RouteMatchList matches,
+    RouteMatchBase match,
   ) {
-    return super.buildState(configuration, this.matches);
+    return super.buildState(configuration, this.matches, match);
   }
 
   @override

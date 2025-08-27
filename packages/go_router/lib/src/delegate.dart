@@ -71,6 +71,7 @@ class GoRouterDelegate extends RouterDelegate<RouteMatchList>
         currentConfiguration.last.buildState(
           _configuration,
           currentConfiguration,
+	  currentConfiguration.last,
         ),
       ));
     }
@@ -161,7 +162,7 @@ class GoRouterDelegate extends RouterDelegate<RouteMatchList>
     scheduleMicrotask(() async {
       final bool onExitResult = await routeBase.onExit!(
         navigatorKey.currentContext!,
-        match.buildState(_configuration, currentConfiguration),
+        match.buildState(_configuration, currentConfiguration, match),
       );
       if (onExitResult) {
         _completeRouteMatch(result, match);
@@ -201,6 +202,7 @@ class GoRouterDelegate extends RouterDelegate<RouteMatchList>
   GoRouterState get state => currentConfiguration.last.buildState(
     _configuration,
     currentConfiguration,
+    currentConfiguration.last,
   );
 
   /// For use by the Router architecture as part of the RouterDelegate.
@@ -307,7 +309,7 @@ class GoRouterDelegate extends RouterDelegate<RouteMatchList>
 
     final FutureOr<bool> exitFuture = goRoute.onExit!(
       context,
-      match.buildState(_configuration, currentConfiguration),
+      match.buildState(_configuration, currentConfiguration, match),
     );
     if (exitFuture is bool) {
       return handleOnExitResult(exitFuture);

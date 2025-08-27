@@ -222,9 +222,10 @@ class RouteConfiguration {
 
   /// Builds a [GoRouterState] suitable for top level callback such as
   /// `GoRouter.redirect` or `GoRouter.onException`.
-  GoRouterState buildTopLevelGoRouterState(RouteMatchList matchList) {
+  GoRouterState buildTopLevelGoRouterState(RouteMatchList matchList, RouteMatch? match) {
     return GoRouterState(
       this,
+      match: match,
       uri: matchList.uri,
       // No name available at the top level trim the query params off the
       // sub-location to match route.redirect
@@ -445,7 +446,7 @@ class RouteConfiguration {
       // Check for top-level redirect
       final FutureOr<String?> topRedirectResult = _routingConfig.value.redirect(
         context,
-        buildTopLevelGoRouterState(prevMatchList),
+        buildTopLevelGoRouterState(prevMatchList, prevMatchList.lastOrNull),
       );
 
       if (topRedirectResult is String?) {
@@ -481,7 +482,7 @@ class RouteConfiguration {
     final RouteBase route = match.route;
     final FutureOr<String?> routeRedirectResult = route.redirect!.call(
       context,
-      match.buildState(this, matchList),
+      match.buildState(this, matchList, match),
     );
     if (routeRedirectResult is String?) {
       return processRouteRedirect(routeRedirectResult);
