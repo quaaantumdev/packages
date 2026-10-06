@@ -512,6 +512,7 @@ class _OnEnterHandler {
   /// Returns a constructed [GoRouterState] reflecting the current or next navigation state.
   GoRouterState _buildTopLevelGoRouterState(RouteMatchList matchList) {
     // Determine effective navigation state from the match list.
+    RouteMatchBase? effectiveMatch = matchList.lastOrNull;
     Uri effectiveUri = matchList.uri;
     String? effectiveFullPath = matchList.fullPath;
     Map<String, String> effectivePathParams = matchList.pathParameters;
@@ -520,12 +521,14 @@ class _OnEnterHandler {
 
     if (matchList.matches.isNotEmpty) {
       RouteMatchBase lastMatch = matchList.matches.last;
+      effectiveMatch = lastMatch;
       // Drill down to the actual leaf match even inside shell routes.
       while (lastMatch is ShellRouteMatch) {
         if (lastMatch.matches.isEmpty) {
           break;
         }
         lastMatch = lastMatch.matches.last;
+        effectiveMatch = lastMatch;
       }
 
       if (lastMatch is ImperativeRouteMatch) {
@@ -544,6 +547,7 @@ class _OnEnterHandler {
 
     return GoRouterState(
       _configuration,
+      match: effectiveMatch,
       uri: effectiveUri,
       matchedLocation: effectiveMatchedLocation,
       name: matchList.lastOrNull?.route.name,

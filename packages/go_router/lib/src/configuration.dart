@@ -209,6 +209,7 @@ class RouteConfiguration {
   GoRouterState buildTopLevelGoRouterState(RouteMatchList matchList) {
     return GoRouterState(
       this,
+      match: matchList.lastOrNull,
       uri: matchList.uri,
       // No name available at the top level trim the query params off the
       // sub-location to match route.redirect

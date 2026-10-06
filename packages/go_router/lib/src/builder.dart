@@ -249,7 +249,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     final pageToRouteMatchBase = <Page<Object?>, RouteMatchBase>{};
     final registry = <Page<Object?>, GoRouterState>{};
     if (widget.matchList.isError) {
-      pages.add(_buildErrorPage(context, widget.matchList));
+      pages.add(_buildErrorPage(context, widget.matchList, widget.matchList.lastOrNull));
     } else {
       Map<String, dynamic> currentInheritedMetadata = widget.inheritedMetadata;
       for (final RouteMatchBase match in widget.matches) {
@@ -279,7 +279,7 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
   Page<Object?>? _buildPage(BuildContext context, RouteMatchBase match, GoRouterState state) {
     if (match is RouteMatch) {
       if (match is ImperativeRouteMatch && match.matches.isError) {
-        return _buildErrorPage(context, match.matches);
+        return _buildErrorPage(context, match.matches, match);
       }
       return _buildPageForGoRoute(context, match, state);
     }
@@ -438,10 +438,11 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
     );
   }
 
-  GoRouterState _buildErrorState(RouteMatchList matchList) {
+  GoRouterState _buildErrorState(RouteMatchList matchList, RouteMatchBase? match) {
     assert(matchList.isError);
     return GoRouterState(
       widget.configuration,
+      match: match,
       uri: matchList.uri,
       matchedLocation: matchList.uri.path,
       fullPath: matchList.fullPath,
@@ -454,8 +455,12 @@ class _CustomNavigatorState extends State<_CustomNavigator> {
   }
 
   /// Builds a an error page.
-  Page<void> _buildErrorPage(BuildContext context, RouteMatchList matchList) {
-    final GoRouterState state = _buildErrorState(matchList);
+  Page<void> _buildErrorPage(
+    BuildContext context,
+    RouteMatchList matchList,
+    RouteMatchBase? match,
+  ) {
+    final GoRouterState state = _buildErrorState(matchList, match);
     assert(state.error != null);
 
     // If the error page builder is provided, use that, otherwise, if the error

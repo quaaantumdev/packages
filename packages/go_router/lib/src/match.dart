@@ -322,6 +322,7 @@ class RouteMatch extends RouteMatchBase {
   }) {
     return GoRouterState(
       configuration,
+      match: this,
       uri: matches.uri,
       matchedLocation: matchedLocation,
       fullPath: matches.fullPath,
@@ -386,6 +387,7 @@ class ShellRouteMatch extends RouteMatchBase {
     }
     return GoRouterState(
       configuration,
+      match: this,
       uri: matches.uri,
       matchedLocation: matchedLocation,
       fullPath: matches.fullPath,
@@ -470,6 +472,7 @@ class ImperativeRouteMatch extends RouteMatch {
   }) {
     return GoRouterState(
       configuration,
+      match: this,
       uri: this.matches.uri,
       matchedLocation: matchedLocation,
       fullPath: this.matches.fullPath,
