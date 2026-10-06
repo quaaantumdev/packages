@@ -345,6 +345,7 @@ class RouteConfiguration {
       if (match is ImperativeRouteMatch) {
         result = result.push(
           ImperativeRouteMatch(
+            routeInstanceKey: match.routeInstanceKey,
             pageKey: match.pageKey,
             matches: findMatch(match.matches.uri, extra: match.matches.extra),
             completer: match.completer,

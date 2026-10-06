@@ -15,6 +15,7 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart' as meta;
 
 import 'configuration.dart';
+import 'create_route_instance_key.dart';
 import 'logging.dart';
 import 'misc/errors.dart';
 import 'path_utils.dart';
@@ -30,6 +31,11 @@ typedef RouteMatchVisitor = bool Function(RouteMatchBase);
 abstract class RouteMatchBase with Diagnosticable {
   /// An abstract route match base
   const RouteMatchBase();
+
+  /// Identifies this match instance, stable across rebuilds of the same
+  /// logical route instance but distinct between two matches of the same
+  /// route (e.g. the same route pushed twice).
+  Object get routeInstanceKey;
 
   /// The matched route.
   RouteBase get route;
@@ -288,7 +294,15 @@ abstract class RouteMatchBase with Diagnosticable {
 @immutable
 class RouteMatch extends RouteMatchBase {
   /// Constructor for [RouteMatch].
-  const RouteMatch({required this.route, required this.matchedLocation, required this.pageKey});
+  RouteMatch({
+    required this.route,
+    required this.matchedLocation,
+    required this.pageKey,
+    Object? routeInstanceKey,
+  }) : routeInstanceKey = routeInstanceKey ?? createRouteInstanceKey();
+
+  @override
+  final Object routeInstanceKey;
 
   /// The matched route.
   @override
@@ -349,7 +363,12 @@ class ShellRouteMatch extends RouteMatchBase {
     required this.matchedLocation,
     required this.pageKey,
     required this.navigatorKey,
-  }) : assert(matches.isNotEmpty);
+    Object? routeInstanceKey,
+  }) : routeInstanceKey = routeInstanceKey ?? createRouteInstanceKey(),
+       assert(matches.isNotEmpty);
+
+  @override
+  final Object routeInstanceKey;
 
   @override
   final ShellRouteBase route;
@@ -408,6 +427,7 @@ class ShellRouteMatch extends RouteMatchBase {
   @meta.internal
   ShellRouteMatch copyWith({required List<RouteMatchBase>? matches}) {
     return ShellRouteMatch(
+      routeInstanceKey: routeInstanceKey,
       matches: matches ?? this.matches,
       route: route,
       matchedLocation: matchedLocation,
@@ -432,11 +452,15 @@ class ShellRouteMatch extends RouteMatchBase {
 /// The route match that represent route pushed through [GoRouter.push].
 class ImperativeRouteMatch extends RouteMatch {
   /// Constructor for [ImperativeRouteMatch].
-  ImperativeRouteMatch({required super.pageKey, required this.matches, required this.completer})
-    : super(
-        route: _getsLastRouteFromMatches(matches),
-        matchedLocation: _getsMatchedLocationFromMatches(matches),
-      );
+  ImperativeRouteMatch({
+    required super.pageKey,
+    required this.matches,
+    required this.completer,
+    super.routeInstanceKey,
+  }) : super(
+         route: _getsLastRouteFromMatches(matches),
+         matchedLocation: _getsMatchedLocationFromMatches(matches),
+       );
 
   static GoRoute _getsLastRouteFromMatches(RouteMatchList matchList) {
     if (matchList.isError) {
